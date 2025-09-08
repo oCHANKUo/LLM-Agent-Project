@@ -4,7 +4,11 @@ from tools import sql_tool
 from tools import predictive_tools
 import config
 
-llm = LlamaCpp(model_path=config.LLAMA_MODEL_PATH)
+llm = LlamaCpp(
+    model_path=config.LLAMA_MODEL_PATH,
+    model_kwargs={"temperature": 0.7, "max_tokens": 512}
+)
+
 
 sql_query_tool = Tool(
     name="SQLQuery",
