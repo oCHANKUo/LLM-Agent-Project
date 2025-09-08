@@ -1,6 +1,6 @@
-from langchain.sql_database import SQLDatabase
+from langchain_community.utilities import SQLDatabase
 from langchain.chains import SQLDatabaseChain
-from langchain.llms import LlamaCpp
+from langchain_community.llms import LlamaCpp
 import config
 
 llm = LlamaCpp(model_path=config.LLAMA_MODEL_PATH)

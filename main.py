@@ -1,6 +1,5 @@
-from langchain.llms import LlamaCpp
-from langchain.agents import initialize_agent, AgentType
-from langchain.agents import Tool
+from langchain_community.llms import LlamaCpp
+from langchain.agents import initialize_agent, AgentType, Tool
 from tools import sql_tool
 from tools import predictive_tools
 import config
