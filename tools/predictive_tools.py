@@ -53,5 +53,15 @@ tools = [
         name="PredictProductDemand",
         func=predict_product_demand,
         description="Predict future product demand via product_demand_model API"
+    ),
+    Tool(
+        name="PredictCustomerBehaviour",
+        func=predict_customer,
+        description="Predict customer behaviour"
+    ),
+    Tool(
+        name="PredictRegionalSales",
+        func=predict_regional_sales,
+        description="Predict regional sales"
     )
 ]
