@@ -1,5 +1,6 @@
 # terminal_text_to_sql.py
 import pyodbc
+from db_schema import TABLE_SCHEMAS
 from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain.agents import create_sql_agent
@@ -18,7 +19,7 @@ db = SQLDatabase.from_uri(
     "mssql+pyodbc://admin:admin@localhost\\MSSQLSERVER03/DataWarehouseClassic?driver=ODBC+Driver+17+for+SQL+Server"
 )
 llm = ChatOllama(model="llama3.1", temperature=0)
-toolkit = SQLDatabaseToolkit(db=db, llm=llm)
+toolkit = SQLDatabaseToolkit(db=db, llm=llm, table_info=TABLE_SCHEMAS)
 agent_executor = create_sql_agent(llm=llm, toolkit=toolkit, verbose=True)  # verbose=True to see steps
 
 # Main loop
