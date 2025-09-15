@@ -9,7 +9,7 @@ db = SQLDatabase.from_uri(
     "mssql+pyodbc://admin:admin@localhost\\MSSQLSERVER03/DataWarehouseClassic?driver=ODBC+Driver+17+for+SQL+Server"
 )
 
-llm = ChatOllama(model="llama3.1", temperature=0)
+llm = ChatOllama(model="llama3.1", temperature=0)  # Temprature = 0 is more suitable for SQL queries
 
 # Create toolkit & agent
 toolkit = SQLDatabaseToolkit(db=db, llm=llm)
