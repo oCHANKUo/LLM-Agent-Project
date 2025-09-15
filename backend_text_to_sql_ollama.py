@@ -1,7 +1,9 @@
 # backend_text_to_sql_flask.py
 import os
+import re
 import pyodbc
 from flask import Flask, request, jsonify
+from flask import render_template_string
 from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain.agents import create_sql_agent
@@ -46,34 +48,76 @@ def format_result_natural(question: str, rows):
     
     return f"Here are the results for '{question}': {rows}"
 
-@app.route("/ask", methods=["POST"])
+@app.route("/ask", methods=["GET", "POST"])
 def ask_question():
     try:
-        data = request.get_json()
-        question = data.get("question", "")
+        # Get question from POST JSON or GET query string
+        if request.method == "POST":
+            if not request.is_json:
+                return jsonify({"error": "Request must be JSON"}), 415
+            data = request.get_json()
+            question = data.get("question", "")
+        else:  # GET
+            question = request.args.get("question", "")
 
         if not question:
             return jsonify({"error": "No question provided"}), 400
 
-        # 1. Generate SQL using LLM
-        sql_query = agent_executor.run(question)
-        if "SELECT" not in sql_query.upper():
+        # Run agent → returns LLM output (may include SQL + result)
+        llm_output = agent_executor.run(question)
+
+        # Extract first SELECT statement to run manually
+        match = re.search(r"(SELECT .*?)(?:\n|$)", llm_output, re.IGNORECASE)
+        if not match:
             return jsonify({"error": "No valid SQL generated"}), 400
 
-        # 2. Execute SQL
+        sql_query = match.group(1)
+
+        # Execute SQL to get structured rows
         rows = execute_sql_query(sql_query)
+        answer = format_result_natural(rows)
 
-        # 3. Format result
-        answer = format_result_natural(question, rows)
+        # GET → show nicely in browser
+        if request.method == "GET":
+            return render_template_string(f"""
+                <h2>Question:</h2>
+                <p>{question}</p>
+                <h2>Generated SQL:</h2>
+                <pre>{sql_query}</pre>
+                <h2>Answer:</h2>
+                <p>{answer}</p>
+                <br>
+                <a href="/">Ask another question</a>
+            """)
 
+        # POST → return clean JSON
         return jsonify({
             "question": question,
             "sql": sql_query,
-            "answer": answer,
-            "rows": rows
+            "rows": rows,
+            "answer": answer
         })
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route("/")
+def home():
+    return render_template_string("""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Ask SQL Bot</title>
+    </head>
+    <body style="font-family: Arial; margin: 40px;">
+        <h2>Ask a Question</h2>
+        <form action="/ask" method="get">
+            <input type="text" name="question" placeholder="Type your question here" style="width: 300px; padding: 8px;">
+            <button type="submit" style="padding: 8px;">Ask</button>
+        </form>
+    </body>
+    </html>
+    """)
 
 if __name__ == "__main__":
     app.run(debug=True)
