@@ -5,9 +5,6 @@ from datetime import datetime
 from langchain_community.chat_models import ChatOllama
 from langchain.prompts import ChatPromptTemplate
 
-# -------------------------
-# Configuration
-# -------------------------
 PREDICTION_APIS = {
     "sales": "http://127.0.0.1:5000/predict_sales_rf",
     "category": "http://127.0.0.1:5000/predict_category_trends"
@@ -15,16 +12,10 @@ PREDICTION_APIS = {
 
 llm = ChatOllama(model="llama3.1", temperature=0)
 
-# -------------------------
-# Helper: Strip Markdown and Parse JSON
-# -------------------------
 def parse_json_response(raw_text):
     clean_text = re.sub(r"^```json|```$", "", raw_text.strip(), flags=re.MULTILINE).strip()
     return json.loads(clean_text)
 
-# -------------------------
-# Main Prediction Function
-# -------------------------
 def handle_natural_language_prediction(user_input):
     current_year = datetime.now().year
 
@@ -86,9 +77,6 @@ def handle_natural_language_prediction(user_input):
     else:
         print("API returned an error:", r.json())
 
-# -------------------------
-# Command-line Interface
-# -------------------------
 if __name__ == "__main__":
     print("NLP Prediction Client (type 'exit' to quit)")
     while True:
