@@ -49,7 +49,7 @@ def main():
             print(f"Question: {question}")
             print(f"Answer: {human_answer}\n")
         except Exception as e:
-            print(f"Error: {e}\n")
+            print(f"Error: {e}")
 
 if __name__ == "__main__":
     main()
