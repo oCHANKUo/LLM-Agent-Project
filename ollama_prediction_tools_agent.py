@@ -6,9 +6,8 @@ from langchain_community.chat_models import ChatOllama
 from langchain.prompts import ChatPromptTemplate
 
 PREDICTION_APIS = {
-    "sales": "http://127.0.0.1:5000/predict_sales_rf",
-    "category": "http://127.0.0.1:5000/predict_category_trends",
-    "regional_sales": "http://127.0.0.1:5001/predict_regional_sales"
+    "sales": "http://127.0.0.1:5004/predict_sales_rf",
+    "regional_sales": "http://127.0.0.1:5001/predict_regional_sales"  # Change this API endpoint
 }
 
 llm = ChatOllama(model="llama3.1", temperature=0)
@@ -22,17 +21,18 @@ def handle_natural_language_prediction(user_input):
 
     # Build prompt for Ollama
     prompt_template = ChatPromptTemplate.from_template("""
-    You are a helpful assistant that extracts prediction requests and parameters.
-    Given the user's request: "{text}", output a JSON object with:
-    - "model": string, one of ["sales", "category", "regional_sales"] depending on prediction type
+    You are a strict JSON generator.
+    You will extract prediction requests and return ONLY a JSON object with the following fields:
+    - "model": one of ["sales", "regional_sales"]
     - "year": integer (default to {current_year} if not mentioned)
     - "month": integer 1-12 or null if not mentioned
-    - "category": string, if relevant for category predictions, else null
-    - "territory": string, if relevant for regional sales (null if not mentioned or if asking for all regions)
+    - "territory": string if relevant for regional_sales, else null
 
-    Choose "regional_sales" if the user is asking for sales predictions broken down by region/territory, highest performing region(s), or sales for a specific region.
-
-    Only output valid JSON. No explanations.
+    Rules:
+    - Always output valid JSON.
+    - No explanations or extra text.
+    - Do not wrap in markdown code fences.
+    User request: "{text}"
     """)
 
     prompt_text = prompt_template.format(text=user_input, current_year=current_year)
@@ -57,8 +57,6 @@ def handle_natural_language_prediction(user_input):
     params = {"year": parsed.get("year", current_year)}
     if parsed.get("month"):
         params["month"] = parsed["month"]
-    if parsed.get("category"):
-        params["category"] = parsed["category"]
     if model == "regional_sales" and parsed.get("territory"):
         params["TerritoryName"] = parsed["territory"]
 
