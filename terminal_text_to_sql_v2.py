@@ -31,21 +31,21 @@ def main():
 
         try:
             raw_answer = agent_executor.run(question)
-            human_answer = llm.invoke(f"""
-            You are a helpful assistant. 
-            The user asked: "{question}"
-            The database returned: "{raw_answer}"
+            # human_answer = llm.invoke(f"""
+            # You are a helpful assistant. 
+            # The user asked: "{question}"
+            # The database returned: "{raw_answer}"
 
-            Write a short, natural language answer for the user.
-            """) 
+            # Write a short, natural language answer for the user.
+            # """) 
 
             # If the result is a ChatResult object, get the text:
-            if hasattr(human_answer, "content"):
-                human_answer = human_answer.content
+            # if hasattr(human_answer, "content"):
+            #     human_answer = human_answer.content
 
             print("\n--- Results ---")
             print(f"Question: {question}")
-            print(f"Answer: {human_answer}\n")
+            print(f"Answer: {raw_answer}\n")
         except Exception as e:
             print(f"Error: {e}")
 
