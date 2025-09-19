@@ -6,14 +6,6 @@ from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain.agents import create_sql_agent
 from langchain_community.chat_models import ChatOllama
 
-DB_CONNECTION = (
-    "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=localhost\\MSSQLSERVER03;"
-    "DATABASE=DataWarehouseClassic;"
-    "UID=admin;"
-    "PWD=admin;"
-)
-
 db = SQLDatabase.from_uri(
     "mssql+pyodbc://admin:admin@localhost\\MSSQLSERVER03/DataWarehouseClassic?driver=ODBC+Driver+17+for+SQL+Server"
 )

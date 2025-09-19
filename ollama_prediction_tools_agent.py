@@ -77,7 +77,7 @@ def handle_natural_language_prediction(user_input):
         print("API returned an error:", r.json())
 
 if __name__ == "__main__":
-    print("NLP Prediction Client (type 'exit' to quit)")
+    print("Prediction Client (type 'exit' to quit)")
     while True:
         user_input = input("\nEnter your prediction request: ")
         if user_input.lower() == "exit":
