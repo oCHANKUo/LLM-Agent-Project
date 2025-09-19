@@ -11,15 +11,13 @@ db = SQLDatabase.from_uri(
     "mssql+pyodbc://admin:admin@localhost\\MSSQLSERVER03/DataWarehouseClassic?driver=ODBC+Driver+17+for+SQL+Server"
 )
 
-# Gemini LLM
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0)
 
-# Create toolkit & agent
 toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 agent_executor = create_sql_agent(
     llm=llm,
     toolkit=toolkit,
-    verbose=True,  # Show reasoning + SQL queries in terminal
+    verbose=True, 
 )
 
 

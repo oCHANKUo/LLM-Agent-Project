@@ -14,7 +14,6 @@ DB_CONNECTION = (
     "PWD=admin;"
 )
 
-# Setup database and agent
 db = SQLDatabase.from_uri(
     "mssql+pyodbc://admin:admin@localhost\\MSSQLSERVER03/DataWarehouseClassic?driver=ODBC+Driver+17+for+SQL+Server"
 )
@@ -53,10 +52,8 @@ def main():
             print("Goodbye!")
             break
 
-        # Run agent → returns LLM output (SQL + result)
         llm_output = agent_executor.run(question)
 
-        # Extract first SELECT statement
         match = re.search(r"(SELECT .*?)(?:\n|$)", llm_output, re.IGNORECASE)
         if not match:
             print("Error: No valid SQL generated.\n")
@@ -64,11 +61,9 @@ def main():
 
         sql_query = match.group(1)
 
-        # Execute SQL to get structured rows
         rows = execute_sql_query(sql_query)
         answer = format_result_natural(rows)
 
-        # Display results
         print("\n--- Results ---")
         print(f"Question: {question}")
         print(f"Generated SQL: {sql_query}")
