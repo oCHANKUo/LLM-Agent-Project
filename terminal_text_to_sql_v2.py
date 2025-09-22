@@ -9,7 +9,7 @@ from langchain_community.chat_models import ChatOllama
 db = SQLDatabase.from_uri(
     "mssql+pyodbc://admin:admin@localhost\\MSSQLSERVER03/DataWarehouseClassic?driver=ODBC+Driver+17+for+SQL+Server"
 )
-llm = ChatOllama(model="llama3.1", temperature=0)
+llm = ChatOllama(model="gemma3", temperature=0)
 toolkit = SQLDatabaseToolkit(db=db, llm=llm, table_info=TABLE_SCHEMAS)
 agent_executor = create_sql_agent(llm=llm, toolkit=toolkit, verbose=True)  # verbose=True to see steps
 
@@ -28,7 +28,8 @@ def main():
             The user asked: "{question}"
             The database returned: "{raw_answer}"
 
-            Write a short, natural language answer for the user.
+            Write a short, natural language answer for the user. If the data is tabular, represent it as a simple ASCII table.
+
             """) 
 
             # If the result is a ChatResult object, get the text:

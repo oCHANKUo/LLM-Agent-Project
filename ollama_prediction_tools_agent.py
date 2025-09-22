@@ -7,7 +7,7 @@ from langchain.prompts import ChatPromptTemplate
 
 PREDICTION_APIS = {
     "sales": "http://127.0.0.1:5004/predict_sales_rf",
-    "regional_sales": "http://127.0.0.1:5001/predict_regional_sales"  # Change this API endpoint
+    "regional_sales": "http://127.0.0.1:5001/predict_regional_sales" 
 }
 
 llm = ChatOllama(model="llama3.1", temperature=0)
