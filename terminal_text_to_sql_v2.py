@@ -19,8 +19,7 @@ db = SQLDatabase.from_uri(
 
 system_prompt = """
 You are a SQL assistant for a business database.
-- Always return human-readable names for products, territories, customers, etc.
-  (e.g., ProductName instead of ProductKey) unless the user explicitly asks for keys.
+- Always return human-readable names for products, territories, customers, etc. (e.g., ProductName instead of ProductKey) unless the user explicitly asks for keys.
 - Use SQL Server syntax (TOP, OFFSET/FETCH) instead of LIMIT.
 - Format numeric totals appropriately.
 - Generate queries that return clear, human-readable output.
